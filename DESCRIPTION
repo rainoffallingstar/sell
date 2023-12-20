@@ -2,12 +2,19 @@ Package: sell
 Version: 0.0.0.9000
 Title: Sell
 Description: A R package in development for Single cELL analysis by using R6 object.
-Authors@R: person(given = "Yanhua",
-       family = "Zheng",
-       role = c("aut", "cre"),
-       email = "2022120685@cmu.edu.cn",
-       comment = c(ORCID = "0000-0003-1103-9579"))
-License: MIT + file LICENSE
+Authors@R: c(person(given = "Yanhua",
+         family = "Zheng",
+         role = c("aut", "cre"),
+         email = "2022120685@cmu.edu.cn",
+         comment = c(ORCID = "0000-0003-1103-9579")),
+  person(given = "Dong",
+         family = "Xu",
+         role = c("aut", "cre"),
+         email = "xd26300@mail.ustc.edu.cn ",
+         comment = c(ORCID = "0000-0002-4129-1778")))
+License: `use_mit_license()`, `use_gpl3_license()` or friends to pick a license
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
 RoxygenNote: 7.2.3
+Imports: 
+    magrittr

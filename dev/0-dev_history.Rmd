@@ -14,12 +14,14 @@ All commands that you use to use when developing packages...
 ```{r description}
 # Describe your package
 fusen::fill_description(
+  overwrite = TRUE,
   pkg = here::here(),
   fields = list(
     Title = "sell",
     Description = "A R package in development for Single cELL analysis by using R6 object.",
     `Authors@R` = c(
-      person("Yanhua", "Zheng", email = "2022120685@cmu.edu.cn", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1103-9579"))
+      person("Yanhua", "Zheng", email = "2022120685@cmu.edu.cn", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1103-9579")),
+      person("Dong", "Xu", email = "xd26300@mail.ustc.edu.cn ", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-4129-1778"))
     )
   )
 )
@@ -56,7 +58,7 @@ remotes::install_local()
 # README
 usethis::use_readme_rmd()
 # Code of Conduct
-usethis::use_code_of_conduct("contact@fake.com")
+usethis::use_code_of_conduct("2022120685@cmu.edu.cn")
 # NEWS
 usethis::use_news_md()
 ```
