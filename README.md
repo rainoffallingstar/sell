@@ -2,7 +2,7 @@
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # sell
-<img src="https://github.com/rainoffallingstar/sell/blob/main/dev/sell.png" height="200" align="right"/>
+<img src="https://github.com/rainoffallingstar/sell/blob/master/dev/sell.png" height="200" align="right"/>
 <!-- badges: start -->
 <!-- badges: end -->
 
