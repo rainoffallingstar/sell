@@ -18,13 +18,15 @@ fusen::fill_description(
   pkg = here::here(),
   fields = list(
     Title = "sell",
-    Description = "A R package in development for Single cELL analysis by using R6 object.",
+    Description = "An R package in development for Single cELL analysis by using R6 object.",
     `Authors@R` = c(
-      person("Yanhua", "Zheng", email = "2022120685@cmu.edu.cn", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1103-9579")),
-      person("Dong", "Xu", email = "xd26300@mail.ustc.edu.cn ", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-4129-1778"))
+      person("Yanhua", "Zheng", email = "yhzheng@cmu.edu.cn", role = c("aut", "cre"), comment = c(ORCID = "0000-0003-1103-9579"))
     )
   )
 )
+
+#person("Dong", "Xu", email = "xd26300@mail.ustc.edu.cn ", role = c("aut", "cre"), comment = c(ORCID = "0000-0002-4129-1778"))
+
 # Define License with use_*_license()
 usethis::use_mit_license("YanhuaZheng")
 ```
@@ -72,7 +74,11 @@ usethis::use_news_md()
 ```{r, eval=FALSE}
 # Pipe
 usethis::use_pipe()
-
+usethis::use_package("dplyr")
+usethis::use_package("stringr")
+usethis::use_package("glue")
+usethis::use_package("Seurat")
+usethis::use_package("pak")
 # package-level documentation
 usethis::use_package_doc()
 

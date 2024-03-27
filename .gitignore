@@ -6,3 +6,5 @@
 docs
 .Rdata
 .quarto
+*.RDS
+inst/doc

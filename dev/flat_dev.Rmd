@@ -13,38 +13,228 @@ library(testthat)
  You need to run the 'description' chunk in the '0-dev_history.Rmd' file before continuing your code there.
 -->
 
-```{r development-load}
-# Load already included functions if relevant
-pkgload::load_all(export_all = FALSE)
-```
-
-# dev
-
-```{r function-dev}
-#' dev Title
-#'
-#' @return 1
+# seurat_detect
+    
+```{r function-seurat_detect}
+#' seurat_api_detect
+#' 
+#' detect seurat api version, if NULL, try to install seurat packages
+#' 
+#' @return num
+#' 
 #' @export
-#'
-#' @examples
-dev <- function() {
-  1
+seurat_api_detect <- function(){
+  library(dplyr)
+  packagelist <- installed.packages() %>%
+    as.data.frame()
+  seurat_exist <- "Seurat" %in% packagelist$Package
+  message("detecting Seurat package ...")
+  while (!seurat_exist) {
+    message("Seurat package not found, we will install it for you...")
+    pak::pak("Seurat")
+    packagelist <- installed.packages() %>%
+      as.data.frame()
+    seurat_exist <- "Seurat" %in% packagelist$Package
+    if (!seurat_exist) {
+      message("Installation of Seurat failed. Please try again or install it manually.")
+      break
+    }
+  }
+  message("Confirming Seurat package API version ...")
+  packagelist <- packagelist %>%
+    dplyr::filter(Package %in% "Seurat")
+  seurat_version <- stringr::str_sub(packagelist$Version[1],1,1) %>% as.numeric()
+  message(glue::glue("The Seurat API V{seurat_version} is used..."))
+  return(seurat_version)
 }
 ```
-
-```{r examples-dev}
-dev()
+  
+```{r example-seurat_detect}
+seurat_api_detect()
 ```
-
-```{r tests-dev}
-test_that("dev works", {
-
+  
+```{r tests-seurat_detect}
+test_that("seurat_detect works", {
+  expect_true(inherits(seurat_api_detect, "function")) 
 })
 ```
 
+# intersect_array_pdata
+    
+```{r function-intersect_array_pdata}
+#' intersect_array_pdata
+#' 
+#' intersect select cells and interested genes
+#' @param arraydata expression matrix
+#' @param pdata pheondata data.frame
+#' @param genelist a vector, with gene names
+#' @return list
+#' 
+#' @export
+intersect_array_pdata <- function(arraydata,pdata,genelist = NA){
+  co_cell <- intersect(colnames(arraydata),rownames(pdata))
+  intersect_list <- list()
+  if (length(co_cell) != 0){
+    intersect_list[["arraydata"]] <- arraydata[,co_cell]
+    intersect_list[["pdata"]] <- pdata[co_cell,]
+    if (!is.na(genelist) & sum(genelist %in% rownames(arraydata)) == length(genelist)){
+      intersect_list[["arraydata"]] <- arraydata[genelist,co_cell]
+    } else if (is.na(genelist)) {
+      message("no filteration in the genes ")
+    } else {
+      stop(glue::glue("{genelist[genelist %in% rownames(arraydata)]} not found in the row.name"))
+    }
+  } else {
+    message("0 intersection found")
+  }
+  return(intersect_list)
+}
+```
+  
+```{r example-intersect_array_pdata}
+arraydata <- readRDS("~/sell/dev/cd8_all_array.RDS")
+pdata <- readRDS("~/sell/dev/cd8_all_meta.RDS")
+newdata <- intersect_array_pdata(arraydata,pdata)
+```
+  
+```{r tests-intersect_array_pdata}
+test_that("intersect_array_pdata works", {
+  expect_true(inherits(intersect_array_pdata, "function")) 
+})
+```
+
+# seurat_encoder
+    
+```{r function-seurat_encoder}
+#' seurat_encoder
+#' 
+#' encode our arraydata and pdata into a seurat object and perform a quick computaion
+#' @param arraydata expression matrix
+#' @param pdata pheondata data.frame
+#' @param project project names
+#' @param min.cells min.cells in initing a seurat object
+#' @param min.features min.features in initing a seurat object
+#' @param reduction_dims dims used in data demention reduction
+#' @param Normalized apply normalized methods
+#' @param Demention apply demention reduction methods
+#' 
+#' @return seurat_object
+#' 
+#' @export
+seurat_encoder <- function(arraydata,
+                           pdata,
+                           project = "SeuratProject",
+                           min.cells = 3,
+                           min.features = 200,
+                           reduction_dims = 1:20,
+                           Normalized = FALSE,
+                           Demention = FALSE
+                           ){
+  library(dplyr)
+  seurat_version <- seurat_api_detect()
+  message(glue::glue("The Seurat API V{seurat_version} is used, start encoding.../n"))
+  seurat_object <- Seurat::CreateSeuratObject(counts = arraydata,
+                             meta.data = pdata,
+                             project = project, min.cells = min.cells, min.features = min.features)
+  if (Normalized){
+      seurat_object <- seurat_object %>% 
+        Seurat::NormalizeData() %>%
+        Seurat::ScaleData()
+    }
+  if (Demention){
+    seurat_object <- seurat_object %>% 
+      Seurat::FindVariableFeatures() %>%
+      Seurat::RunPCA() %>%
+      Seurat::RunUMAP(dims = reduction_dims) %>%
+      Seurat::RunTSNE()
+  }
+    
+  return(seurat_object)
+}
+```
+  
+```{r example-seurat_encoder}
+seurat_object <- seurat_encoder(newdata[["arraydata"]],newdata[["pdata"]],min.cells = 0,
+                           min.features = 0,reduction_dims = 1:5)
+```
+  
+```{r tests-seurat_encoder}
+test_that("seurat_encoder works", {
+  expect_true(inherits(seurat_encoder, "function")) 
+})
+```
+
+# seurat_decoder
+    
+```{r function-seurat_decoder}
+#' seurat_decoder
+#' 
+#' extract data from the seurat container
+#' @param seurat_object the seurat object
+#' @param HasNormalized the seurat object has normalized when TRUE
+#' @param HasZscored the seurat object has Zscored when TRUE
+#' @param PCA the seurat object has performed PCA when TRUE
+#' @param UMAP the seurat object has performed UMAP when TRUE
+#' @param TSNE the seurat object has performed TSNE when TRUE
+#' @return list
+#' 
+#' @export
+seurat_decoder <- function(seurat_object,
+                           HasNormalized = FALSE,
+                           HasZscored = FALSE,
+                           PCA = FALSE,
+                           UMAP = FALSE,
+                           TSNE = FALSE){
+  library(dplyr)
+  seurat_version <- seurat_api_detect()
+  message(glue::glue("The Seurat API V{seurat_version} is used, start decoding.../n HasNormalized & HasZscored are default as FALSE "))
+  decode_list <- list()
+  if (seurat_version < 5){
+    decode_list[["meta_data"]] <- seurat_object@meta.data
+    decode_list[["counts"]] <- seurat_object@assays$RNA@counts
+    if (HasNormalized){
+      decode_list[["Normalized_data"]] <- seurat_object@assays$RNA@data
+    }
+    if (HasZscored){
+      decode_list[["scale_data"]] <- seurat_object@assays$RNA@scale.data
+    }
+  } else {
+    decode_list[["meta_data"]] <- seurat_object@meta.data
+    decode_list[["counts"]] <- seurat_object[["RNA"]]$counts
+    if (HasNormalized){
+      decode_list[["Normalized_data"]] <- seurat_Object[["RNA"]]$data
+    }
+    if (HasZscored){
+      decode_list[["scale_data"]] <- seurat_Object[["RNA"]]$scale.data
+    }
+  }
+  if (PCA){
+    decode_list[["PCA"]] <- Embeddings(seurat_object,"pca")
+  }
+  if (UMAP){
+    decode_list[["UMAP"]] <- Embeddings(seurat_object,"umap")
+  }
+  if (TSNE){
+    decode_list[["TSNE"]] <- Embeddings(seurat_object,"tsne")
+  }
+  return(decode_list)
+}
+
+```
+  
+```{r example-seurat_decoder}
+sell_list <- seurat_decoder(seurat_object)
+```
+  
+```{r tests-seurat_decoder}
+test_that("seurat_decoder works", {
+  expect_true(inherits(seurat_decoder, "function")) 
+})
+```
+  
 
 ```{r development-inflate, eval=FALSE}
 # Run but keep eval=FALSE to avoid infinite loop
 # Execute in the console directly
-fusen::inflate(flat_file = "dev/flat_dev.Rmd", vignette_name = "Minimal")
+fusen::inflate(flat_file = "dev/flat_dev.Rmd")
 ```

@@ -6,7 +6,7 @@
 <!-- badges: start -->
 <!-- badges: end -->
 
-The goal of sell is to build a R6-based package for singlecell analysis.
+The goal of sell is to build a R6-based package for singlecell analysis. Now warped with Seurat V4/V5.
 
 ## Installation
 
@@ -14,14 +14,24 @@ You can install the development version of sell like so:
 
 ``` r
 # FILL THIS IN! HOW CAN PEOPLE INSTALL YOUR DEV PACKAGE?
-devtools::install("rainoffallingstar/sell")
+pak::pak("rainoffallingstar/sell")
 ```
 
 ## Example
 
 This is a basic example which shows you how to solve a common problem:
 
-``` r
-#library(sell)
+```{r example}
+library(sell)
 ## basic example code
+## check seurat api
+seurat_api_detect()
+
+## encode your array and pdata into seurat object and take computation
+seurat_object <- seurat_encoder(newdata[["arraydata"]],newdata[["pdata"]],min.cells = 0,
+                           min.features = 0,reduction_dims = 1:5)
+## extract datas from seurat container
+
+sell_list <- seurat_decoder(seurat_object)
+
 ```

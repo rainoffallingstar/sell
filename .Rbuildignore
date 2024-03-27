@@ -6,3 +6,5 @@
 ^docs$
 ^pkgdown$
 ^\.github$
+^sell\.Rproj$
+^\.Rproj\.user$

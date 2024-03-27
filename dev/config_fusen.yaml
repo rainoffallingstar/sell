@@ -1,0 +1,21 @@
+flat_dev.Rmd:
+  path: dev/flat_dev.Rmd
+  state: active
+  R:
+  - R/intersect_array_pdata.R
+  - R/seurat_api_detect.R
+  - R/seurat_decoder.R
+  - R/seurat_encoder.R
+  tests:
+  - tests/testthat/test-seurat_api_detect.R
+  - tests/testthat/test-intersect_array_pdata.R
+  - tests/testthat/test-seurat_encoder.R
+  - tests/testthat/test-seurat_decoder.R
+  vignettes: vignettes/get-started.Rmd
+  inflate:
+    flat_file: dev/flat_dev.Rmd
+    vignette_name: Get started
+    open_vignette: true
+    check: true
+    document: true
+    overwrite: ask
