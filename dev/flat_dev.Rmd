@@ -246,7 +246,7 @@ test_that("seurat_decoder works", {
 #' @return R6Class
 #' 
 #' @export
-bagend <- R6::R6Class(
+BagEndClass <- R6::R6Class(
   "BagEnd",
   public = list(
     arraydata = NA,pdata = NA,
@@ -264,12 +264,12 @@ bagend <- R6::R6Class(
 ```
   
 ```{r example-bagend}
-sellobject <- bagend$new(arraydata = arraydata,pdata = pdata)
+sellobject <- BagEndClass$new(arraydata = arraydata,pdata = pdata)
 ```
   
 ```{r tests-bagend}
 test_that("bagend works", {
-  expect_true(inherits(bagend, "R6ClassGenerator")) 
+  expect_true(inherits(BagEndClass, "R6ClassGenerator")) 
 })
 ```
   

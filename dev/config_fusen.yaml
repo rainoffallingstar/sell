@@ -2,7 +2,7 @@ flat_dev.Rmd:
   path: dev/flat_dev.Rmd
   state: active
   R:
-  - R/bagend.R
+  - R/bagendclass.R
   - R/intersect_array_pdata.R
   - R/sell_melt.R
   - R/seurat_api_detect.R
@@ -13,7 +13,7 @@ flat_dev.Rmd:
   - tests/testthat/test-intersect_array_pdata.R
   - tests/testthat/test-seurat_encoder.R
   - tests/testthat/test-seurat_decoder.R
-  - tests/testthat/test-bagend.R
+  - tests/testthat/test-bagendclass.R
   - tests/testthat/test-sell_melt.R
   vignettes: vignettes/get-started.Rmd
   inflate:
