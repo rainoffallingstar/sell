@@ -12,8 +12,10 @@ Imports:
     glue,
     magrittr,
     pak,
+    R6,
     Seurat,
-    stringr
+    stringr,
+    tidyr
 Suggests: 
     knitr,
     rmarkdown,

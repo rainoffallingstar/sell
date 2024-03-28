@@ -4,7 +4,12 @@
 \alias{intersect_array_pdata}
 \title{intersect_array_pdata}
 \usage{
-intersect_array_pdata(arraydata, pdata, genelist = NA)
+intersect_array_pdata(
+  arraydata,
+  pdata,
+  genelist = NA,
+  pdata_row2col = "sampleid"
+)
 }
 \arguments{
 \item{arraydata}{expression matrix}
@@ -12,6 +17,8 @@ intersect_array_pdata(arraydata, pdata, genelist = NA)
 \item{pdata}{pheondata data.frame}
 
 \item{genelist}{a vector, with gene names}
+
+\item{pdata_row2col}{transform the row.names of pdata into a col,default as sampleid}
 }
 \value{
 list

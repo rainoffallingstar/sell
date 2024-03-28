@@ -68,15 +68,18 @@ test_that("seurat_detect works", {
 #' @param arraydata expression matrix
 #' @param pdata pheondata data.frame
 #' @param genelist a vector, with gene names
+#' @param pdata_row2col transform the row.names of pdata into a col,default as sampleid
 #' @return list
 #' 
 #' @export
-intersect_array_pdata <- function(arraydata,pdata,genelist = NA){
+intersect_array_pdata <- function(arraydata,pdata,genelist = NA,pdata_row2col = "sampleid"){
   co_cell <- intersect(colnames(arraydata),rownames(pdata))
   intersect_list <- list()
   if (length(co_cell) != 0){
     intersect_list[["arraydata"]] <- arraydata[,co_cell]
-    intersect_list[["pdata"]] <- pdata[co_cell,]
+    message("try transform the row.names of pdata into a col, default as sampleid")
+    intersect_list[["pdata"]] <- pdata[co_cell,] %>% 
+      dplyr::mutate(sampleid = rownames(.))
     if (!is.na(genelist) & sum(genelist %in% rownames(arraydata)) == length(genelist)){
       intersect_list[["arraydata"]] <- arraydata[genelist,co_cell]
     } else if (is.na(genelist)) {
@@ -229,6 +232,87 @@ sell_list <- seurat_decoder(seurat_object)
 ```{r tests-seurat_decoder}
 test_that("seurat_decoder works", {
   expect_true(inherits(seurat_decoder, "function")) 
+})
+```
+  
+# bagend
+    
+```{r function-bagend}
+#' BagEnd
+#' 
+#' In a hole in the ground there lived a lot of cells,lol. 
+#' @param arraydata expression matrix
+#' @param pdata pheondata data.frame
+#' @return R6Class
+#' 
+#' @export
+bagend <- R6::R6Class(
+  "BagEnd",
+  public = list(
+    arraydata = NA,pdata = NA,
+    initialize = function(arraydata,pdata){
+      self$arraydata <- array 
+      self$pdata <- pdata
+      self$info()
+    },
+    info = function(){
+      message("In a hole in the ground there lived a lot of cells,lol,this is an R6 object for singlecell object")
+    }
+    # more effects should be done in providing methods
+  )
+)
+```
+  
+```{r example-bagend}
+sellobject <- bagend$new(arraydata = arraydata,pdata = pdata)
+```
+  
+```{r tests-bagend}
+test_that("bagend works", {
+  expect_true(inherits(bagend, "R6ClassGenerator")) 
+})
+```
+  
+# sell_melt
+    
+```{r function-sell_melt}
+#' sell_melt
+#' 
+#' melt the arraydata and pdata into a long table for following plotting works
+#' @param intersect_list a list object preprocessed by intersect_array_pdata function, which should has 2 items including arraydata and pdata
+#' @param pdata_row2col transform the row.names of pdata into a col,default as sampleid
+#' @return data.frame
+#' 
+#' @export
+sell_melt <- function(intersect_list,pdata_row2col = "sampleid"){
+  if (class(intersect_list) != "list"){
+      stop("the input should be a list object preprocessed by intersect_array_pdata function, which should has 2 items including arraydata and pdata ")
+    }
+  if (!(pdata_row2col %in% colnames(intersect_list[["pdata"]]))){
+    stop(glue::glue("{col_sampleid} not found in the col.names of pdata"))
+  } 
+  message("start sell melting ")
+  pdata <- intersect_list[["pdata"]]
+  melt_matrix <- intersect_list[["arraydata"]] %>%
+    as.data.frame() %>% 
+    dplyr::mutate(Gene = rownames(.)) %>% 
+    dplyr::select(all_of(c("Gene",pdata$sampleid))) %>%
+    dplyr::relocate(Gene) %>% 
+    tidyr::pivot_longer(cols = -Gene, 
+                              names_to = pdata_row2col, 
+                              values_to = "value") %>% 
+    dplyr::left_join(pdata,by = pdata_row2col ) 
+  return(melt_matrix)
+}
+```
+  
+```{r example-sell_melt}
+melt_df <- sell_melt(newdata)
+```
+  
+```{r tests-sell_melt}
+test_that("sell_melt works", {
+  expect_true(inherits(sell_melt, "function")) 
 })
 ```
   

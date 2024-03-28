@@ -78,4 +78,32 @@ sell_list <- seurat_decoder(seurat_object)
 
   
 
+# bagend
+
+    
+
+  
+
+```{r example-bagend}
+sellobject <- bagend$new(arraydata = arraydata,pdata = pdata)
+```
+
+  
+
+  
+
+# sell_melt
+
+    
+
+  
+
+```{r example-sell_melt}
+melt_df <- sell_melt(newdata)
+```
+
+  
+
+  
+
 

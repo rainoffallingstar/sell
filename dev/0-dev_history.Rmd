@@ -79,6 +79,8 @@ usethis::use_package("stringr")
 usethis::use_package("glue")
 usethis::use_package("Seurat")
 usethis::use_package("pak")
+usethis::use_package("R6")
+usethis::use_package("tidyr")
 # package-level documentation
 usethis::use_package_doc()
 

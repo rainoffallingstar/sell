@@ -6,6 +6,7 @@
 #' @param arraydata expression matrix
 #' @param pdata pheondata data.frame
 #' @param genelist a vector, with gene names
+#' @param pdata_row2col transform the row.names of pdata into a col,default as sampleid
 #' @return list
 #' 
 #' @export
@@ -13,12 +14,14 @@
 #' arraydata <- readRDS("~/sell/dev/cd8_all_array.RDS")
 #' pdata <- readRDS("~/sell/dev/cd8_all_meta.RDS")
 #' newdata <- intersect_array_pdata(arraydata,pdata)
-intersect_array_pdata <- function(arraydata,pdata,genelist = NA){
+intersect_array_pdata <- function(arraydata,pdata,genelist = NA,pdata_row2col = "sampleid"){
   co_cell <- intersect(colnames(arraydata),rownames(pdata))
   intersect_list <- list()
   if (length(co_cell) != 0){
     intersect_list[["arraydata"]] <- arraydata[,co_cell]
-    intersect_list[["pdata"]] <- pdata[co_cell,]
+    message("try transform the row.names of pdata into a col, default as sampleid")
+    intersect_list[["pdata"]] <- pdata[co_cell,] %>% 
+      dplyr::mutate(sampleid = rownames(.))
     if (!is.na(genelist) & sum(genelist %in% rownames(arraydata)) == length(genelist)){
       intersect_list[["arraydata"]] <- arraydata[genelist,co_cell]
     } else if (is.na(genelist)) {
