@@ -78,13 +78,13 @@ sell_list <- seurat_decoder(seurat_object)
 
   
 
-# bagend
+# BagEndClass
 
     
 
   
 
-```{r example-bagend}
+```{r example-BagEndClass}
 sellobject <- BagEndClass$new(arraydata = arraydata,pdata = pdata)
 ```
 

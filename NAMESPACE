@@ -2,7 +2,6 @@
 
 export("%>%")
 export(BagEndClass)
-export(bagend)
 export(intersect_array_pdata)
 export(sell_melt)
 export(seurat_api_detect)

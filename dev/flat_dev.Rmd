@@ -235,9 +235,9 @@ test_that("seurat_decoder works", {
 })
 ```
   
-# bagend
+# BagEndClass
     
-```{r function-bagend}
+```{r function-BagEndClass}
 #' BagEnd
 #' 
 #' In a hole in the ground there lived a lot of cells,lol. 
@@ -263,11 +263,11 @@ BagEndClass <- R6::R6Class(
 )
 ```
   
-```{r example-bagend}
+```{r example-BagEndClass}
 sellobject <- BagEndClass$new(arraydata = arraydata,pdata = pdata)
 ```
   
-```{r tests-bagend}
+```{r tests-BagEndClass}
 test_that("bagend works", {
   expect_true(inherits(BagEndClass, "R6ClassGenerator")) 
 })
