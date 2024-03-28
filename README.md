@@ -39,7 +39,7 @@ sell_list <- seurat_decoder(seurat_object)
 ## creat a R6 object for single cell: BagEnd
 ## In a hole in the ground there lived a lot of cells,lol
 
-sellobject <- bagend$new(arraydata = arraydata,pdata = pdata)
+sellobject <- BagEndClass$new(arraydata = arraydata,pdata = pdata)
 
 ## select interested samples and gene and transform into a long table for further works
 sell_melt_df <- intersect_array_pdata(arraydata,pdata) %>% 
