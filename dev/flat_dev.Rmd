@@ -241,6 +241,9 @@ test_that("seurat_decoder works", {
 #' BagEnd
 #' 
 #' In a hole in the ground there lived a lot of cells,lol. 
+#' @field arraydata numeric NULL 存储基因表达数据的数组。
+#' @field pdata character NULL 存储每个细胞的样本注释数据。
+#'
 #' @param arraydata expression matrix
 #' @param pdata pheondata data.frame
 #' @return R6Class
@@ -250,11 +253,20 @@ BagEndClass <- R6::R6Class(
   "BagEnd",
   public = list(
     arraydata = NA,pdata = NA,
+#' @method initialize
+#' 初始化R6对象的构造函数。
+#'
+#' @param arraydata matrix 传递给构造函数的基因表达数据数组。
+#' @param pdata data.frame 传递给构造函数的每个细胞的样本注释数据。
+#' @return R6对象的实例。
     initialize = function(arraydata,pdata){
       self$arraydata <- array 
       self$pdata <- pdata
       self$info()
     },
+#' @method info
+#' 打印R6对象中的信息。
+#' @return NULL
     info = function(){
       message("In a hole in the ground there lived a lot of cells,lol,this is an R6 object for singlecell object")
     }

@@ -12,6 +12,15 @@ In a hole in the ground there lived a lot of cells,lol.
 \examples{
 sellobject <- BagEndClass$new(arraydata = arraydata,pdata = pdata)
 }
+\section{Public fields}{
+\if{html}{\out{<div class="r6-fields">}}
+\describe{
+\item{\code{arraydata}}{numeric NULL 存储基因表达数据的数组。}
+
+\item{\code{pdata}}{character NULL 存储每个细胞的样本注释数据。}
+}
+\if{html}{\out{</div>}}
+}
 \section{Methods}{
 \subsection{Public methods}{
 \itemize{
@@ -31,11 +40,14 @@ sellobject <- BagEndClass$new(arraydata = arraydata,pdata = pdata)
 \subsection{Arguments}{
 \if{html}{\out{<div class="arguments">}}
 \describe{
-\item{\code{arraydata}}{expression matrix}
+\item{\code{arraydata}}{matrix 传递给构造函数的基因表达数据数组。}
 
-\item{\code{pdata}}{pheondata data.frame}
+\item{\code{pdata}}{data.frame 传递给构造函数的每个细胞的样本注释数据。}
 }
 \if{html}{\out{</div>}}
+}
+\subsection{Returns}{
+R6对象的实例。
 }
 }
 \if{html}{\out{<hr>}}
@@ -46,6 +58,9 @@ sellobject <- BagEndClass$new(arraydata = arraydata,pdata = pdata)
 \if{html}{\out{<div class="r">}}\preformatted{BagEndClass$info()}\if{html}{\out{</div>}}
 }
 
+\subsection{Returns}{
+NULL
+}
 }
 \if{html}{\out{<hr>}}
 \if{html}{\out{<a id="method-BagEnd-clone"></a>}}
