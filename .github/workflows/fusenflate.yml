@@ -1,0 +1,32 @@
+name: Deploy to RStudio Connect
+
+on:
+  push:
+    branches:
+      - master
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    container:
+      image: rocker/verse:latest
+
+    steps:
+
+    - name: Checkout repository
+      uses: actions/checkout@v2
+
+    - name: Install dependencies
+      run: install2.r --error pak
+
+    - name: Install fusen
+      run: |
+          pak::pak("fusen")
+          fusen::inflate(flat_file = "dev/flat_first.Rmd",check = FALSE,open_vignette = FALSE,document = TRUE,overwrite = "yes")
+      shell: Rscript {0}
+
+    - name: Push results
+      run: |
+          git add --all *
+          git commit -m "inflate Update"
+          git push -q https://${{secrets.GH_TOKEN}}@github.com/${{secrets.GH_REPOSITORY}}.git HEAD:master
